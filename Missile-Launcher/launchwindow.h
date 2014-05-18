@@ -29,14 +29,12 @@ private slots:
 
 private:
   Ui::LaunchWindow *ui;
-  ml_launcher_t **launcher_array = NULL;
-  uint32_t launcher_count = 0;
+  ml_launcher_t **launcherArray = NULL;
+  uint32_t launcherCount = 0;
   static const int listWidgetRole = Qt::UserRole + 1;
 
   void enableLauncherButtons();
   void disableLauncherButtons();
-
-
 };
 
 #endif // LAUNCHWINDOW_H
