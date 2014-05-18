@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-CONFIG += link_pkgconfig
+CONFIG += link_pkgconfig c++11
 PKGCONFIG += libmissilelauncher
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

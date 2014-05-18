@@ -69,7 +69,6 @@ void LaunchWindow::fireOne() {
 
 void LaunchWindow::stopAll() {
   for(uint32_t i = 0; i < launcher_count; i++) {
-
     //ml_stop_launcher(launcher_array[i]);
   }
 }
