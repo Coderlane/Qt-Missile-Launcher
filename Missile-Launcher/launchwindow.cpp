@@ -1,12 +1,26 @@
+/**
+ * @file launchwindow.cpp
+ * @brief 
+ * @author Travis Lane
+ * @version 0.1.0
+ * @date 2014-05-18
+ */
+
 #include "launchwindow.h"
 #include "ui_launchwindow.h"
 
+/**
+ * @brief Creates a new LaunchWindow.
+ *
+ * @param parent The parent window.
+ */
 LaunchWindow::LaunchWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::LaunchWindow) {
   ui->setupUi(this);
   disableLauncherButtons();
-  // Setup Connections
+  
+	// Setup Connections
   connect(ui->leftButton, SIGNAL(pressed()), this, SLOT(moveLeft()));
   connect(ui->rightButton, SIGNAL(pressed()), this, SLOT(moveRight()));
   connect(ui->upButton, SIGNAL(pressed()), this, SLOT(moveUp()));
@@ -21,6 +35,9 @@ LaunchWindow::LaunchWindow(QWidget *parent) :
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 }
 
+/**
+ * @brief Destroys the LaunchWindow.
+ */
 LaunchWindow::~LaunchWindow() {
   if(launcherArray != NULL) {
     ml_free_launcher_array(launcherArray);
@@ -29,21 +46,37 @@ LaunchWindow::~LaunchWindow() {
   delete ui;
 }
 
+/**
+ * @brief Handles the scan button click event.
+ */
 void LaunchWindow::on_scanButton_clicked() {
+	int16_t result = 0;
+	stopAll();
+	// Remove all old launchers.
   ui->launcherListWidget->clear();
   if(launcherArray != NULL) {
     ml_free_launcher_array(launcherArray);
     launcherArray = NULL;
   }
-  ml_get_launcher_array(&launcherArray, &launcherCount);
+	// Grab new launchers.
+  result = ml_get_launcher_array(&launcherArray, &launcherCount);
+	if(result != ML_OK) {
+		launcherCount = 0;
+	}
+	// Updated displayed items.
   for(uint32_t i = 0; i < launcherCount; i++) {
     QListWidgetItem *newItem = new QListWidgetItem(QString::number(i, 10));
     newItem->setData(this->listWidgetRole, i);
     ui->launcherListWidget->addItem(newItem);
   }
-  //TODO check for bad status
+	if(launcherCount == 0) {
+		disableLauncherButtons();
+	}
 }
 
+/**
+ * @brief Disables the launcher control buttons.
+ */
 void LaunchWindow::disableLauncherButtons() {
   ui->upButton->setEnabled(false);
   ui->downButton->setEnabled(false);
@@ -52,6 +85,9 @@ void LaunchWindow::disableLauncherButtons() {
   ui->fireButton->setEnabled(false);
 }
 
+/**
+ * @brief Enables the launcher control buttons.
+ */
 void LaunchWindow::enableLauncherButtons() {
   ui->upButton->setEnabled(true);
   ui->downButton->setEnabled(true);
@@ -60,6 +96,9 @@ void LaunchWindow::enableLauncherButtons() {
   ui->fireButton->setEnabled(true);
 }
 
+/**
+ * @brief Handles the update of the selected items
+ */
 void LaunchWindow::on_launcherListWidget_itemSelectionChanged() {
   stopAll();
   if(ui->launcherListWidget->selectedItems().count() == 0) {
@@ -69,7 +108,9 @@ void LaunchWindow::on_launcherListWidget_itemSelectionChanged() {
   }
 }
 
-
+/**
+ * @brief Fires one missile from each of the selected launchers 
+ */
 void LaunchWindow::fireOne() {
   stopAll();
   foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
@@ -84,12 +125,18 @@ void LaunchWindow::fireOne() {
   }
 }
 
+/**
+ * @brief Stops all of the launchers. 
+ */
 void LaunchWindow::stopAll() {
   for(uint32_t i = 0; i < launcherCount; i++) {
     ml_stop_launcher(launcherArray[i]);
   }
 }
 
+/**
+ * @brief Moves all of the selected launchers to the left untill told to stop. 
+ */
 void LaunchWindow::moveLeft() {
   stopAll();
   foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
@@ -104,6 +151,9 @@ void LaunchWindow::moveLeft() {
   }
 }
 
+/**
+ * @brief Moves all of the selected launchers to the right untill told to stop. 
+ */
 void LaunchWindow::moveRight() {
   stopAll();
   foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
@@ -118,6 +168,9 @@ void LaunchWindow::moveRight() {
   }
 }
 
+/**
+ * @brief Moves all of the selected launchers up untill told to stop. 
+ */
 void LaunchWindow::moveUp() {
   stopAll();
   foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
@@ -133,6 +186,9 @@ void LaunchWindow::moveUp() {
 
 }
 
+/**
+ * @brief Moves all of the selected launchers down untill told to stop. 
+ */
 void LaunchWindow::moveDown() {
   stopAll();
   foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
