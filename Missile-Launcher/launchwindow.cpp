@@ -52,25 +52,6 @@ void LaunchWindow::on_launcherListWidget_itemSelectionChanged() {
   }
 }
 
-void LaunchWindow::on_fireButton_clicked() {
-  fireOne();
-}
-
-void LaunchWindow::on_rightButton_clicked() {
-  moveRight();
-}
-
-void LaunchWindow::on_leftButton_clicked() {
-  moveLeft();
-}
-
-void LaunchWindow::on_downButton_clicked() {
-  moveDown();
-}
-
-void LaunchWindow::on_upButton_clicked() {
-  moveUp();
-}
 
 void LaunchWindow::fireOne() {
   stopAll();
@@ -87,25 +68,65 @@ void LaunchWindow::fireOne() {
 }
 
 void LaunchWindow::stopAll() {
+  for(uint32_t i = 0; i < launcher_count; i++) {
 
+    //ml_stop_launcher(launcher_array[i]);
+  }
 }
 
 void LaunchWindow::moveLeft() {
   stopAll();
-
+  foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
+    bool ok = false;
+    uint launcher_index = 0;
+    ml_launcher_t *cur_launcher = NULL;
+    launcher_index = item->data(listWidgetRole).toUInt(&ok);
+    if(ok) {
+      cur_launcher = this->launcher_array[launcher_index];
+      ml_move_launcher(cur_launcher, ML_LEFT);
+    }
+  }
 }
 
 void LaunchWindow::moveRight() {
   stopAll();
-
+  foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
+    bool ok = false;
+    uint launcher_index = 0;
+    ml_launcher_t *cur_launcher = NULL;
+    launcher_index = item->data(listWidgetRole).toUInt(&ok);
+    if(ok) {
+      cur_launcher = this->launcher_array[launcher_index];
+      ml_move_launcher(cur_launcher, ML_RIGHT);
+    }
+  }
 }
 
 void LaunchWindow::moveUp() {
   stopAll();
+  foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
+    bool ok = false;
+    uint launcher_index = 0;
+    ml_launcher_t *cur_launcher = NULL;
+    launcher_index = item->data(listWidgetRole).toUInt(&ok);
+    if(ok) {
+      cur_launcher = this->launcher_array[launcher_index];
+      ml_move_launcher(cur_launcher, ML_UP);
+    }
+  }
 
 }
 
 void LaunchWindow::moveDown() {
   stopAll();
-
+  foreach(QListWidgetItem *item, ui->launcherListWidget->selectedItems()) {
+    bool ok = false;
+    uint launcher_index = 0;
+    ml_launcher_t *cur_launcher = NULL;
+    launcher_index = item->data(listWidgetRole).toUInt(&ok);
+    if(ok) {
+      cur_launcher = this->launcher_array[launcher_index];
+      ml_move_launcher(cur_launcher, ML_DOWN);
+    }
+  }
 }

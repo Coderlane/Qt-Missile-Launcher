@@ -20,11 +20,12 @@ private slots:
   void on_scanButton_clicked();
   void on_launcherListWidget_itemSelectionChanged();
 
-  void on_fireButton_clicked();
-  void on_rightButton_clicked();
-  void on_upButton_clicked();
-  void on_leftButton_clicked();
-  void on_downButton_clicked();
+  void moveLeft();
+  void moveRight();
+  void moveUp();
+  void moveDown();
+  void fireOne();
+  void stopAll();
 
 private:
   Ui::LaunchWindow *ui;
@@ -35,12 +36,7 @@ private:
   void enableLauncherButtons();
   void disableLauncherButtons();
 
-  void moveLeft();
-  void moveRight();
-  void moveUp();
-  void moveDown();
-  void fireOne();
-  void stopAll();
+
 };
 
 #endif // LAUNCHWINDOW_H
