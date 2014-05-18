@@ -17,15 +17,15 @@ public:
   ~LaunchWindow();
 
 private slots:
-  void on_scanButton_clicked();
   void on_launcherListWidget_itemSelectionChanged();
 
+  void scanForLaunchers();
+  void fireOne();
+  void stopAll();
   void moveLeft();
   void moveRight();
   void moveUp();
   void moveDown();
-  void fireOne();
-  void stopAll();
 
 private:
   Ui::LaunchWindow *ui;

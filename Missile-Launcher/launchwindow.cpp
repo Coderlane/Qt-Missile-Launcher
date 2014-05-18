@@ -32,6 +32,7 @@ LaunchWindow::LaunchWindow(QWidget *parent) :
   connect(ui->downButton, SIGNAL(released()), this, SLOT(stopAll()));
 
   connect(ui->fireButton, SIGNAL(clicked()), this, SLOT(fireOne()));
+  connect(ui->scanButton, SIGNAL(clicked()), this, SLOT(scanForLaunchers()));
   connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
 }
 
@@ -47,31 +48,31 @@ LaunchWindow::~LaunchWindow() {
 }
 
 /**
- * @brief Handles the scan button click event.
+ * @brief Scans for new launchers and updates the display.
  */
-void LaunchWindow::on_scanButton_clicked() {
-	int16_t result = 0;
-	stopAll();
-	// Remove all old launchers.
+void LaunchWindow::scanForLaunchers() {
+  int16_t result = 0;
+  stopAll();
+  // Remove all old launchers.
   ui->launcherListWidget->clear();
   if(launcherArray != NULL) {
     ml_free_launcher_array(launcherArray);
     launcherArray = NULL;
   }
-	// Grab new launchers.
+  // Grab new launchers.
   result = ml_get_launcher_array(&launcherArray, &launcherCount);
-	if(result != ML_OK) {
-		launcherCount = 0;
-	}
-	// Updated displayed items.
+  if(result != ML_OK) {
+    launcherCount = 0;
+  }
+  // Updated displayed items.
   for(uint32_t i = 0; i < launcherCount; i++) {
     QListWidgetItem *newItem = new QListWidgetItem(QString::number(i, 10));
     newItem->setData(this->listWidgetRole, i);
     ui->launcherListWidget->addItem(newItem);
   }
-	if(launcherCount == 0) {
-		disableLauncherButtons();
-	}
+  if(launcherCount == 0) {
+    disableLauncherButtons();
+  }
 }
 
 /**
