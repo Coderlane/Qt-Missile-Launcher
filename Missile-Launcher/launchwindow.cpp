@@ -25,6 +25,7 @@ LaunchWindow::LaunchWindow(QWidget *parent) :
   connect(ui->rightButton, SIGNAL(pressed()), this, SLOT(moveRight()));
   connect(ui->upButton, SIGNAL(pressed()), this, SLOT(moveUp()));
   connect(ui->downButton, SIGNAL(pressed()), this, SLOT(moveDown()));
+  //connect(this, SIGNAL())
 
   connect(ui->leftButton, SIGNAL(released()), this, SLOT(stopAll()));
   connect(ui->rightButton, SIGNAL(released()), this, SLOT(stopAll()));
@@ -45,6 +46,41 @@ LaunchWindow::~LaunchWindow() {
     launcherArray = NULL;
   }
   delete ui;
+}
+
+/**
+ * @brief handles the key press event
+ */
+void LaunchWindow::keyPressEvent(QKeyEvent *keyEvent){
+  switch(keyEvent->key()) {
+  case Qt::Key_W:
+  case Qt::Key_Up:
+    moveUp();
+    break;
+  case Qt::Key_S:
+  case Qt::Key_Down:
+    moveDown();
+    break;
+  case Qt::Key_A:
+  case Qt::Key_Left:
+    moveLeft();
+    break;
+  case Qt::Key_D:
+  case Qt::Key_Right:
+    moveRight();
+    break;
+  case Qt::Key_F:
+  case Qt::Key_Space:
+    fireOne();
+    break;
+  }
+}
+
+/**
+ * @brief Handles the key release event
+ */
+void LaunchWindow::keyReleaseEvent(QKeyEvent *) {
+  this->stopAll();
 }
 
 /**

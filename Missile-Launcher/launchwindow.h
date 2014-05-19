@@ -2,6 +2,7 @@
 #define LAUNCHWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
 #include <libmissilelauncher/libmissilelauncher.h>
 
 namespace Ui {
@@ -32,6 +33,9 @@ private:
   ml_launcher_t **launcherArray = NULL;
   uint32_t launcherCount = 0;
   static const int listWidgetRole = Qt::UserRole + 1;
+
+  void keyPressEvent(QKeyEvent*);
+  void keyReleaseEvent(QKeyEvent*);
 
   void enableLauncherButtons();
   void disableLauncherButtons();
