@@ -42,7 +42,7 @@ LaunchWindow::LaunchWindow(QWidget *parent) :
  */
 LaunchWindow::~LaunchWindow() {
   if(launcherArray != NULL) {
-    ml_free_launcher_array(launcherArray);
+    ml_launcher_array_free(launcherArray);
     launcherArray = NULL;
   }
   delete ui;
@@ -92,11 +92,11 @@ void LaunchWindow::scanForLaunchers() {
   // Remove all old launchers.
   ui->launcherListWidget->clear();
   if(launcherArray != NULL) {
-    ml_free_launcher_array(launcherArray);
+    ml_launcher_array_free(launcherArray);
     launcherArray = NULL;
   }
   // Grab new launchers.
-  result = ml_get_launcher_array(&launcherArray, &launcherCount);
+  result = ml_launcher_array_new(&launcherArray, &launcherCount);
   if(result != ML_OK) {
     launcherCount = 0;
   }
@@ -157,7 +157,7 @@ void LaunchWindow::fireOne() {
     launcher_index = item->data(listWidgetRole).toUInt(&ok);
     if(ok) {
       cur_launcher = this->launcherArray[launcher_index];
-      ml_fire_launcher(cur_launcher);
+      ml_launcher_fire(cur_launcher);
     }
   }
 }
@@ -167,7 +167,7 @@ void LaunchWindow::fireOne() {
  */
 void LaunchWindow::stopAll() {
   for(uint32_t i = 0; i < launcherCount; i++) {
-    ml_stop_launcher(launcherArray[i]);
+    ml_launcher_stop(launcherArray[i]);
   }
 }
 
@@ -183,7 +183,7 @@ void LaunchWindow::moveLeft() {
     launcher_index = item->data(listWidgetRole).toUInt(&ok);
     if(ok) {
       cur_launcher = this->launcherArray[launcher_index];
-      ml_move_launcher(cur_launcher, ML_LEFT);
+      ml_launcher_move(cur_launcher, ML_LEFT);
     }
   }
 }
@@ -200,7 +200,7 @@ void LaunchWindow::moveRight() {
     launcher_index = item->data(listWidgetRole).toUInt(&ok);
     if(ok) {
       cur_launcher = this->launcherArray[launcher_index];
-      ml_move_launcher(cur_launcher, ML_RIGHT);
+      ml_launcher_move(cur_launcher, ML_RIGHT);
     }
   }
 }
@@ -216,8 +216,10 @@ void LaunchWindow::moveUp() {
     ml_launcher_t *cur_launcher = NULL;
     launcher_index = item->data(listWidgetRole).toUInt(&ok);
     if(ok) {
+      int rv;
       cur_launcher = this->launcherArray[launcher_index];
-      ml_move_launcher(cur_launcher, ML_UP);
+      rv = ml_launcher_move(cur_launcher, ML_UP);
+      std::cerr << "Code: " << rv << std::endl;
     }
   }
 
@@ -235,7 +237,7 @@ void LaunchWindow::moveDown() {
     launcher_index = item->data(listWidgetRole).toUInt(&ok);
     if(ok) {
       cur_launcher = this->launcherArray[launcher_index];
-      ml_move_launcher(cur_launcher, ML_DOWN);
+      ml_launcher_move(cur_launcher, ML_DOWN);
     }
   }
 }

@@ -1,6 +1,8 @@
 #ifndef LAUNCHWINDOW_H
 #define LAUNCHWINDOW_H
 
+#include <iostream>
+
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <libmissilelauncher/libmissilelauncher.h>
