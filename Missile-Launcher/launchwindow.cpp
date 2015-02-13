@@ -41,10 +41,13 @@ LaunchWindow::LaunchWindow(QWidget *parent) :
  * @brief Destroys the LaunchWindow.
  */
 LaunchWindow::~LaunchWindow() {
-  if(launcherArray != NULL) {
-    ml_launcher_array_free(launcherArray);
-    launcherArray = NULL;
-  }
+    if(launcherArray != NULL) {
+        for(uint32_t i = 0; i < launcherCount; i++) {
+          ml_launcher_unclaim(launcherArray[i]);
+        }
+      ml_launcher_array_free(launcherArray);
+      launcherArray = NULL;
+    }
   delete ui;
 }
 
@@ -92,6 +95,9 @@ void LaunchWindow::scanForLaunchers() {
   // Remove all old launchers.
   ui->launcherListWidget->clear();
   if(launcherArray != NULL) {
+      for(uint32_t i = 0; i < launcherCount; i++) {
+        ml_launcher_unclaim(launcherArray[i]);
+      }
     ml_launcher_array_free(launcherArray);
     launcherArray = NULL;
   }
@@ -103,6 +109,7 @@ void LaunchWindow::scanForLaunchers() {
   // Updated displayed items.
   for(uint32_t i = 0; i < launcherCount; i++) {
     QListWidgetItem *newItem = new QListWidgetItem(QString::number(i, 10));
+    ml_launcher_claim(launcherArray[i]);
     newItem->setData(this->listWidgetRole, i);
     ui->launcherListWidget->addItem(newItem);
   }
